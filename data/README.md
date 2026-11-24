@@ -10,6 +10,7 @@
 data/
 ├── README.md
 ├── astrodata/
+│   ├── ChandraXCT_ObsID104_data/     # ObsID 104（2000），验证 Krauss 2007 用
 │   └── package_350687_261107223325/
 │       ├── 24700/
 │       ├── 26204/
@@ -25,22 +26,26 @@ data/
 - 想了解观测质量或重新处理：查看观测质量报告、`secondary/` 及 CIAO 文档。
 - 想找研究依据和历史结果：查看第 5 节的文献索引。
 
-## 2. astrodata：三组 Chandra 观测
+文献的逐篇阅读说明、建议顺序、分析对照项目及版本管理见 [paper 文献阅读与使用指南](paper/README.md)。
 
-数据包来自 Chandra Data Archive，目录名中的数字是 ObsID。三组数据的目标均为 `4U 1626-67`，使用 ACIS 探测器和 HETG 光栅，`READMODE=TIMED`、`DATAMODE=FAINT`。
+## 2. astrodata：四组 Chandra 观测
+
+数据包来自 Chandra Data Archive，目录名中的数字是 ObsID。四组数据的目标均为 `4U 1626-67`，均使用 ACIS 探测器与 HETG 光栅（`DATAMODE=FAINT`）。
 
 | ObsID / 本地目录 | `DATE-OBS` 原值 | `DATE-END` 原值 | `EXPOSURE`（ks） | 在课题中的用途 |
 | --- | --- | --- | --- | --- |
+| [104](astrodata/ChandraXCT_ObsID104_data/) | 2000-09-16T14:58:38 | 2000-09-17T02:36:11 | 39.478 | 验证 Krauss et al. 2007 的 2000 年 HETGS 结果；本项目的历史基线 |
 | [26204](astrodata/package_350687_261107223325/26204/) | 2021-11-13T07:16:05 | 2021-11-13T12:48:03 | 17.129 | 2023 年反转前的历史对照 |
 | [24700](astrodata/package_350687_261107223325/24700/) | 2022-01-05T21:51:52 | 2022-01-06T01:51:37 | 11.757 | 2023 年反转前的历史对照 |
 | [27954](astrodata/package_350687_261107223325/27954/) | 2023-07-29T14:56:10 | 2023-07-29T23:50:42 | 29.337 | 新自转减速阶段的主要研究数据 |
 
-表中时间直接抄自各 `EVENTS` 扩展的文件头，未换算为北京时间；曝光量为 `EXPOSURE/1000`，并非起止时间相减。前两组按文献中的长期演化划分作为第二次加速阶段的对照，具体力矩状态仍应与长期计时资料交叉核对。**不能把三组数据都当作 2023 年后的减速观测。**
+表中时间直接抄自各 `EVENTS` 扩展的文件头，未换算为北京时间；曝光量为 `EXPOSURE/1000`，并非起止时间相减。前两组（26204、24700）按文献中的长期演化划分作为第二次加速阶段的对照，具体力矩状态仍应与长期计时资料交叉核对。**不能把 2021–2023 的三组数据当作同一阶段，也不能把它们与 2000 年的 104 混成一组比较。**
 
-三组归档产品的 `ASCDSVER` 均为 `10.14.1.1`，`CALDBVER` 均为 `4.12.2`。归档 `00README` 首页的日期是数据分发说明日期，不是观测日期，也不等于本仓库的下载日期。
+前三组归档产品的 `ASCDSVER` 均为 `10.14.1.1`，`CALDBVER` 均为 `4.12.2`；`104` 是 2021 年分发的 `10.9.2` / `4.9.4`，代次更早，跨观测比较时必须记录。归档 `00README` 首页的日期是数据分发说明日期，不是观测日期，也不等于本仓库的下载日期。
 
 | ObsID | 原始归档说明 | 数据引用 / 观测详情 |
 | --- | --- | --- |
+| 104 | [00README](astrodata/ChandraXCT_ObsID104_data/00README) | [DOI: 10.25574/104](https://doi.org/10.25574/104) · [观测详情](https://cda.cfa.harvard.edu/srservices/ocatDetails?obsid=104) |
 | 24700 | [00README](astrodata/package_350687_261107223325/24700/00README) | [DOI: 10.25574/24700](https://doi.org/10.25574/24700) · [观测详情](https://cda.cfa.harvard.edu/srservices/ocatDetails?obsid=24700) |
 | 26204 | [00README](astrodata/package_350687_261107223325/26204/00README) | [DOI: 10.25574/26204](https://doi.org/10.25574/26204) · [观测详情](https://cda.cfa.harvard.edu/srservices/ocatDetails?obsid=26204) |
 | 27954 | [00README](astrodata/package_350687_261107223325/27954/00README) | [DOI: 10.25574/27954](https://doi.org/10.25574/27954) · [观测详情](https://cda.cfa.harvard.edu/srservices/ocatDetails?obsid=27954) |
@@ -106,6 +111,17 @@ data/
 本包 `pha2` 的 `RESPFILE`、`ANCRFILE`、`BACKFILE` 为 `none`，不能假定拟合软件会自动找到响应和背景；需要在载入后显式配对，或按 CIAO 的光栅谱提取流程生成配套产品。表内有 `BACKGROUND_UP`、`BACKGROUND_DOWN` 和相关缩放信息，背景处理应按工具文档进行。
 
 `BIN_LO`、`BIN_HI` 的单位为 Å，`COUNTS` 为计数；不要把波长轴直接标成 keV，也不要把计数谱直接当作物理流量谱。初步可分别检查 HEG / MEG 的正负一级谱，再决定联合拟合或合并，记录相应的响应和背景处理。
+
+### 2.4 ChandraXCT_ObsID104_data：验证 Krauss 2007 用的数据
+
+`astrodata/ChandraXCT_ObsID104_data/` 是 Krauss et al. 2007（ApJ 660, 605）所用 **Chandra HETGS 2000-09-16 观测（ObsID 104）** 的归档数据，用途是**逐项核对论文中的谱线与计时结果**，不是本项目的新观测；它同时也是 Schulz et al. 2001（S01）的原始数据。完整说明、论文目标值对照表、已知差异与复现检查清单见该目录下的 [README](astrodata/ChandraXCT_ObsID104_data/README.md)。
+
+与第 2 节前三组的区别：
+
+- **只有 ±1 级响应**（8 个 ARF/RMF）。论文只使用 ±1 级（"combined the ±1 spectral orders"），未用 ±2/±3 级。
+- 未下载 `evt1a`（70 MB）与 `vvref2`（79 MB）；需要时用 `codespace/download_obs104.ps1 -Profile full` 或按该目录 README 3.2 小节的直链补齐。
+- 分析目标不是新结果，而是**复现论文数值**；对不上的地方要归因到校准版本（论文为 CIAO 3.3 + CALDB 3.2.1，本包为 CXC 10.9.2 / CALDB 4.9.4）、模型（`tbnew` + Cash）或级次合并方式，不能直接当作新物理结论。
+- 论文另一组 HETGS 数据 `ObsID 3504`（2003-06-03）尚未下载；要做 2000→2003 的线流量 / 等值宽演化（Fig. 4），需补 <https://cxc.cfa.harvard.edu/cdaftp/byobsid/4/3504/>。
 
 ## 3. 从打开文件到开展分析
 
